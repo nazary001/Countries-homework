@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countries</title>
+    <link rel ='stylesheet' href = 'styles.css'>
+</head>
+<body>
+    <h1>Countries INFO</h1>
+    <div class = 'choise_block'>
+        <div class = 'region_block'>
+            <h2>REGION</h2>
+            <select id = 'region' required = 'required'>
+                <option value = '' disabled hidden selected>Pick a region</option>
+                <option value = 'africa'>Africa</option>
+                <option value = 'america'>America</option>
+                <option value = 'asia'>Asia</option>
+                <option value = 'europe'>Europe</option>
+                <option value = 'oceania'>Oceania</option>
+            </select>
+        </div>
+        <div class = 'subregion_block'>
+            <h2>SUBREGION</h2>
+            <select required = 'required' id = 'subregion'></select>
+        </div>
+    </div>
+    <div id = 'countries'></div>
+    
+    <script src = 'app.js'></script>
+</body>
+</html>
