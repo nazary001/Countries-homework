@@ -106,9 +106,11 @@ subregionSelect.addEventListener('change', (event) => {
                 languages.appendChild(language);
             }
 
-            let view = document.createElement('h3');
+            let view = document.createElement('a');
             view.innerText = 'View on map';
-
+            view.href = country.maps.openStreetMaps;
+            view.target = '_blank';
+            
             facts_div.appendChild(facts);
             facts_div.appendChild(countryCapital);
             facts_div.appendChild(area);
@@ -119,6 +121,7 @@ subregionSelect.addEventListener('change', (event) => {
             facts_div.style.padding = '3rem';
             facts_div.style.margin = '5rem';
             facts_div.style.borderRadius = '1rem';
+            facts_div.style.height = 'fit-content';
         });
     });
     
