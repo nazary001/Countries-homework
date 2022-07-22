@@ -30,12 +30,9 @@ select{
     align-self: center;
 }
 
-#countries{
-    align-self: flex-start;
-    margin: 5rem;
-    width: 400px;
-    height: 300px;
-    background-color:rgba(0, 0, 0, 0.151);
+#countries_block{
+    display: flex;
+    gap: 2rem;
 }
 
 

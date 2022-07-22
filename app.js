@@ -1,48 +1,127 @@
-let region = document.querySelector('#region');
-let subregion = document.querySelector('#subregion');
-let countries = document.querySelector('#countries');
+let regionSelect = document.querySelector('#region');
+let subregionSelect = document.querySelector('#subregion');
+let countriesDiv = document.querySelector('#countries');
+let facts_div = document.querySelector('#country_facts')
 
-region.addEventListener('change', (evnt) => {
+const regions = ['Africa', 'America', 'Asia', 'Europe', 'Oceania'];
+let subregions = [];
+let countries = [];
 
-     while(subregion.firstChild){
-        subregion.removeChild(subregion.firstChild);
-    }
+for(idx in regions){
+    let option = document.createElement('option');
+    option.text = regions[idx];
+    option.setAttribute('value', regions[idx]);
+    regionSelect.appendChild(option);
+}
 
-    let subregions = [];
+regionSelect.addEventListener('change', (event) =>{
+    
+    subregionSelect.replaceChildren([]);
+    countriesDiv.replaceChildren([]);
+    facts_div.replaceChildren([]);
+    countries = [];
 
-    fetch(`https://restcountries.com/v3.1/region/${evnt.target.value}`)
-    .then((response) => {return response.json()})
-    .then((data) => {
-        for(idx in data){
-            subregions.push(data[idx].subregion);
-        }
+    fetch(`https://restcountries.com/v3.1/region/${event.target.value}`)
+    .then(response => {return response.json()})
+    .then(data => {
+        for(country of data){
+            countries.push(country);
+        };
 
-    subregions = subregions.filter((el, id) => subregions.indexOf(el) === id);
+        let pickSubregionOption = document.createElement('option');
+        pickSubregionOption.text = 'Pick a subregion';
+        pickSubregionOption.value = '';
+        pickSubregionOption.setAttribute('disabled', 'disabled');
+        pickSubregionOption.setAttribute('hidden', 'hidden');
+        pickSubregionOption.setAttribute('selected', 'selected');
+        subregionSelect.appendChild(pickSubregionOption);
 
-    for(let i = 0; i < subregions.length; i++){
-        let option = document.createElement('option');
-        subregion.appendChild(option);
-        option.setAttribute('value', subregions[i])
-        option.text = subregions[i];
-    }
+        subregions = [...new Set(countries.map(country => country.subregion))];
 
-    subregion.addEventListener('change', (evnt) =>{
-        let cntrys = [];
-        fetch(`https://restcountries.com/v3.1/region/${evnt.target.value}`)
-        .then((response) => {return response.json()})
-        .then((data) => {
-            for(idx in data)
-            cntrys.push(data[idx].name.official)
-        })
+        for(subregion of subregions){
+            let option = document.createElement('option');
+            option.text = subregion;
+            option.setAttribute('value', subregion);
+            subregionSelect.appendChild(option);
+        };
+    }); 
+});
 
-        for(let i = 0; i < cntrys.length; i++){
-            let h2 = document.createElement('h2');
-            h2.textContent = cntrys[i];
-            countries.appendChild(h2);
-        }
+subregionSelect.addEventListener('change', (event) => {
+
+    countriesDiv.replaceChildren([]);
+    facts_div.replaceChildren([]);
+
+    let subregion = event.target.value;
+    let subregionCountries = countries.filter(country => country.subregion === subregion);
+    subregionCountries.forEach(country => {
+        let div = document.createElement('div')
+        div.style.display = 'flex';
+
+        let h2 = document.createElement('h2');
+        h2.textContent = country.name.official;
+
+        let flag = document.createElement('img');
+        flag.src = country.flags.png;
+        flag.style.width = '3rem';
+        flag.style.height = '2rem';
+        flag.style.alignSelf = 'center';
+        flag.style.marginLeft = '2rem';
+
+        countriesDiv.appendChild(div);
+        div.appendChild(h2);
+        div.appendChild(flag);
+
+        countriesDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.151)';
+        countriesDiv.style.padding = '3rem';
+        countriesDiv.style.margin = '5rem';
+        countriesDiv.style.borderRadius = '1rem';
+
+        h2.addEventListener('click', () => {
+
+            facts_div.replaceChildren([]);
+
+            let facts = document.createElement('h3');
+            facts.innerText = 'FACTS:';
+
+            let countryCapital = document.createElement('h3');
+            countryCapital.innerText = `capital: ${country.capital}`;
+
+            let area = document.createElement('h3');
+            area.innerText = `area: ${country.area}`;
+
+            let currencies = document.createElement('ul');
+            currencies.innerText = 'Currencies:'
+            for(crnc in country.currencies){
+                let currencie = document.createElement('li');
+                currencie.innerText = `${country.currencies[crnc].name} : ${country.currencies[crnc].symbol}`;
+                currencies.appendChild(currencie);
+            }
+
+            let languages = document.createElement('ul');
+            languages.innerText = 'Languages:'
+            for(lng in country.languages){
+                let language = document.createElement('li');
+                language.innerText = `${lng} : ${country.languages[lng]}`;
+                languages.appendChild(language);
+            }
+
+            let view = document.createElement('h3');
+            view.innerText = 'View on map';
+
+            facts_div.appendChild(facts);
+            facts_div.appendChild(countryCapital);
+            facts_div.appendChild(area);
+            facts_div.appendChild(currencies);
+            facts_div.appendChild(languages);
+            facts_div.appendChild(view);
+            facts_div.style.backgroundColor = 'rgba(0, 0, 0, 0.151)';
+            facts_div.style.padding = '3rem';
+            facts_div.style.margin = '5rem';
+            facts_div.style.borderRadius = '1rem';
+        });
     });
+    
+
+    
 });
-});
-
-
-
